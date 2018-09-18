@@ -70,6 +70,13 @@ class LogStash::Outputs::Jdbc < LogStash::Outputs::Base
   # Connection timeout
   config :connection_timeout, validate: :number, default: 10000
 
+  # Max Life Time
+  config :max_life_time, validate: :number, default: 300000
+
+  # Idle Timeout
+  config :idle_timeout, validate: :number, default: 290000
+
+
   # We buffer a certain number of events before flushing that out to SQL.
   # This setting controls how many events will be buffered before sending a
   # batch of events.
@@ -155,6 +162,9 @@ class LogStash::Outputs::Jdbc < LogStash::Outputs::Base
 
     @pool.setMaximumPoolSize(@max_pool_size)
     @pool.setConnectionTimeout(@connection_timeout)
+
+    @pool.setMaxLifetime(@max_life_time)
+    @pool.setIdleTimeout(@idle_timeout)
 
     validate_connection_timeout = (@connection_timeout / 1000) / 2
 
